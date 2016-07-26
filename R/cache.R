@@ -8,6 +8,9 @@
 #' @param variable A character vector containing the name of the variable to
 #'  be saved.
 #'
+#' @param subdir A character string. If provided, the variable will be cached
+#' in a subdirectory within the cache directory.
+#'
 #' @param ... additional arguments passed to \code{\link{save}}
 #'
 #' @return No value is returned; this function is called for its side effects.
@@ -24,11 +27,12 @@
 #'
 #' setwd('..')
 #' unlink('tmp-project')}
-cache <- function(variable, ...)
+cache <- function(variable, subdir = "", ...)
 {
   stopifnot(length(variable) == 1)
+  .provide.directory(file.path('cache', subdir))
   save(list = variable,
        envir = .TargetEnv,
-       file = file.path('cache', paste0(variable, '.RData')),
+       file = file.path('cache', subdir, paste0(variable, '.RData')),
        ...)
 }

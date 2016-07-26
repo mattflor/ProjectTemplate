@@ -17,7 +17,7 @@
 #' library('ProjectTemplate')
 #'
 #' \dontrun{load.project()}
-load.project <- function(override.config = NULL)
+load.project <- function(override.config = NULL, cache.subdir = "")
 {
   my.project.info <- list()
 
@@ -72,7 +72,7 @@ load.project <- function(override.config = NULL)
   {
     message('Autoloading cache')
 
-    my.project.info$cache <- .load.cache()
+    my.project.info$cache <- .load.cache(subdir = cache.subdir)
   }
 
   # Then we consider loading things from data/.
@@ -137,14 +137,14 @@ load.project <- function(override.config = NULL)
   ret
 }
 
-.load.cache <- function() {
-  .provide.directory('cache')
-  cache.files <- dir('cache')
+.load.cache <- function(subdir = '') {
+  .provide.directory(file.path('cache', subdir))
+  cache.files <- dir(file.path('cache', subdir))
   cached.files <- c()
 
   for (cache.file in cache.files)
   {
-    filename <- file.path('cache', cache.file)
+    filename <- file.path('cache', subdir, cache.file)
 
     for (extension in ls(extensions.dispatch.table))
     {
